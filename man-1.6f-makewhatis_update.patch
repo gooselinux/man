@@ -1,0 +1,32 @@
+diff -up man-1.6f/src/makewhatis.sh.update man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.update	2009-04-19 22:01:26.900609474 +0200
++++ man-1.6f/src/makewhatis.sh	2009-04-19 22:06:46.690612151 +0200
+@@ -35,6 +35,8 @@
+ # 060608 - Corrected traps.
+ # 060719 - section choosing behavior to match man's (Mike frysinger).
+ #
++# 090419 - Add -U flag, Lubomir Rintel <lkundrak@v3.sk>
++#
+ # Note for Slackware users: "makewhatis -v -w -c" will work.
+ #
+ # makewhatis flc 060719 (from @version@)
+@@ -121,6 +123,9 @@ case $name in
+ 	continue;;
+     -o) setwhatis=1
+         continue;;
++    -U) [ -f "$whatisdb" ] && findarg="-cnewer $whatisdb"
++	update=1
++	continue;;
+     -u) findarg="-ctime 0"
+ 	update=1
+ 	continue;;
+@@ -133,7 +138,8 @@ case $name in
+ 	echo "       This will build the whatis database for the man pages"
+ 	echo "       found in manpath and the cat pages found in catpath."
+         echo "       -s: sections (default: $sections)"
+-	echo "       -u: update database with new pages"
++	echo "       -u: update database with pages added today"
++	echo "       -U: update database with pages added since last makewhatis run"
+ 	echo "       -v: verbose"
+         echo "       -o: location of whatis database (default: $DEFWHATIS)"
+ 	echo "       -w: use manpath obtained from \`man --path\`"

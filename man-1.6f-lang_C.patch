@@ -1,0 +1,15 @@
+diff -up man-1.6f/src/manpath.c.pom man-1.6f/src/manpath.c
+--- man-1.6f/src/manpath.c.pom	2008-11-21 11:32:40.000000000 +0100
++++ man-1.6f/src/manpath.c	2008-11-21 11:32:21.000000000 +0100
+@@ -256,6 +256,11 @@ add_to_list (char *dir, char *lang, int 
+ static void
+ add_to_mandirlist_x (char *dir, char *lang, int perrs) {
+ 	add_to_list(dir, lang, perrs);
++        if (lang && strncmp(lang,"C",1) == 0) {
++                char lang2[2];
++                lang2[0] = 0;
++                add_to_list(dir, lang2, perrs);
++        }
+ 	if (lang && strlen(lang) > 5 && lang[5] == '.') {
+ 		char lang2[6];	/* e.g. zh_CN from zh_CN.GB2312 */
+ 

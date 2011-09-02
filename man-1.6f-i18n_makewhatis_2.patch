@@ -1,0 +1,12 @@
+diff -up man-1.6f/src/makewhatis.sh.pom man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.pom	2008-03-25 10:20:33.000000000 +0100
++++ man-1.6f/src/makewhatis.sh	2008-03-25 10:21:24.000000000 +0100
+@@ -434,6 +434,8 @@ do
+ 	      do_one();
+ 	    }
+ 	    ' pages=$pages section=$section verbose=$verbose curdir=$curdir
++		fi
++	      done
+ 	    cd ..
+ 	 fi
+        done > $TMPFILE

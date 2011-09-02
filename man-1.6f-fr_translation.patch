@@ -1,0 +1,651 @@
+diff -u man-1.6f.orig/man/fr/apropos.man man-1.6f/man/fr/apropos.man
+--- man-1.6f.orig/man/fr/apropos.man	2006-01-26 00:15:30.000000000 +0100
++++ man-1.6f/man/fr/apropos.man	2008-04-12 17:36:44.000000000 +0200
+@@ -13,10 +13,15 @@
+ .\" The University of Texas at Austin
+ .\" Austin, Texas  78712
+ .\"
+-.TH APROPOS 1 "19 septembre 2005" "Manuel Linux" "Commandes utilisateur"
++.\" Traduction : René Cougnenc
++.\" 01/05/1995
++.\" Màj 07/11/2005 man-1.6e
++.\" Màj 12/04/2008 man-1.6f
++.\"
++.TH APROPOS 1 "19 septembre 2005" "" "Manuel de l'utilisateur Linux"
+ .LO 1
+ .SH NOM
+-apropos \- recherche de chaînes de caractères dans la base de données whatis
++apropos \- Rechercher des chaînes de caractères dans la base de données whatis
+ .SH SYNOPSIS
+ .BI apropos
+ mot-clé ...
+@@ -24,24 +29,21 @@
+ apropos effectue une recherche de chaînes de caractères dans un
+ ensemble de fichiers de données contenant de brèves descriptions des
+ commandes système, et affiche le résultat sur la sortie standard.
+-
+ .SH AUTEUR
+ John W. Eaton est l'auteur historique de
+ .BR man .
+ Federico Lucifredi <flucifredi@acm.org> en assure aujourd'hui la maintenance.
+-
+ .SH "VOIR AUSSI"
+ .BR whatis (1),
+-.BR man (1).
+-
++.BR man (1)
+ .SH TRADUCTION
+ .PP
+-Ce document est une traduction réalisée par René Cougnenc en mai 1995 et mise
+-à jour par Alain Portal <aportal AT univ-montp2 DOT fr> le 7 novembre 2005.
++Ce document est une traduction réalisée par René Cougnenc en mai 1995, mise
++à jour par Alain Portal <aportal AT univ-montp2 DOT fr> le 7 novembre 2005
++et révisée le 12\ avril\ 2008.
+ .PP
+ L'équipe de traduction a fait le maximum pour réaliser une adaptation
+ française de qualité. La version anglaise la plus à jour de ce document est
+-toujours consultable via la commande\ : «\ \fBLANG=en\ man\ 1\ apropos\fR\ ».
++toujours consultable via la commande\ : «\ \fBLANG=C\ man\ 1\ apropos\fR\ ».
+ N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute
+ erreur dans cette page de manuel.
+-
+diff -u man-1.6f.orig/man/fr/makewhatis.man man-1.6f/man/fr/makewhatis.man
+--- man-1.6f.orig/man/fr/makewhatis.man	2006-01-26 00:17:36.000000000 +0100
++++ man-1.6f/man/fr/makewhatis.man	2008-04-12 17:36:44.000000000 +0200
+@@ -1,7 +1,5 @@
+ .\" Copyright (c) 1999 Ottavio G. Rizzo <rizzo@pluto.linux.it>
+ .\"
+-.\" Traduction : Alain Portal <aportal AT univ-montp2 DOT fr> le 1/6/2005
+-.\"
+ .\" This is free documentation; you can redistribute it and/or
+ .\" modify it under the terms of the GNU General Public License as
+ .\" published by the Free Software Foundation; either version 2 of
+@@ -21,10 +19,15 @@
+ .\" License along with this manual; if not, write to the Free
+ .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+ .\" USA.
+-.\" 
+-.TH MAKEWHATIS 8 "19 septembre 2005"
++.\"
++.\" Traduction : Alain Portal
++.\" 01/06/2005 man-1.6
++.\" Màj 07/11/2005 man-1.6e
++.\" Màj 12/04/2008 man-1.6f
++.\"
++.TH MAKEWHATIS 8 "19 septembre 2005" "" "Manuel de l'administrateur Linux"
+ .SH NOM
+-makewhatis \- Crée la base de données whatis
++makewhatis \- Créer la base de données whatis
+ .SH SYNOPSIS
+ .BI "makewhatis [-u] [-v] [-w] [-s " sections " ] [-c [" catpath "]] [" manpath "]"
+ .SH DESCRIPTION
+@@ -55,18 +58,18 @@
+ .IR /usr/man .
+ .SH OPTIONS
+ .TP
+-.B -u
++.B \-u
+ Mettre à jour la base de données avec de nouvelles pages.
+ .TP
+-.B -v
+-Sortie bavarde.
++.B \-v
++Sortie volubile.
+ .TP
+-.B -w
++.B \-w
+ Utiliser le chemin de recherche
+ .I manpath
+ obtenu par la commande «\ man --path\ ».
+ .TP 
+-.BI -s " sections"
++.BI \-s " sections"
+ Chercher dans les sections
+ .I sections
+ de
+@@ -74,17 +77,18 @@
+ Si cette option est absente, sa valeur est
+ .IR  " " \' "1 2 3 4 5 6 7 8 9 n l"\'
+ .TP 
+-.BI -c " catpath"
++.BI \-c " catpath"
+ Les pages préformatées de manuel situées dans
+ .I catpath
+-sont scrutées. Si l'argument n'est pas fourni, il est supposé être le premier
++sont scrutées.
++Si l'argument n'est pas fourni, il est supposé être le premier
+ des deux répertoires existant entre
+ .IR /usr/man/preformat " et " /usr/man .
+ .SH EXEMPLES
+ .PP
+ Pour reconstruire seulement les bases de données
+ .IR /usr/X11R6/man/whatis " et " /usr/local/man/whatis
+-.IP 
++.IP
+ makewhatis /usr/X11R6/man /usr/local/man
+ .PP
+ Pour reconstruire toutes les bases de données en incluant les traductions
+@@ -98,26 +102,23 @@
+ .PP
+ .B makewhatis
+ ne fonctionne pas avec les traductions préformatées.
+-
+ .SH AUTEUR
+ John W. Eaton est l'auteur historique de
+ .BR man .
+ Federico Lucifredi <flucifredi@acm.org> en assure aujourd'hui la maintenance.
+-
+-.SH "VOIR AUSSI"
++.SH VOIR AUSSI
+ .BR apropos (1),
+ .BR man (1),
+ .BR whatis (1)
+-
+ .SH TRADUCTION
+ .PP
+ Ce document est une traduction réalisée par Alain Portal
+-<aportal AT univ-montp2 DOT fr> le 1er juin 2005 et mise à jour
+-le 7 novembre 2005.
++<aportal AT univ-montp2 DOT fr> le 1er juin 2005, mise à jour
++le 7\ novembre\ 2005
++et révisée le 12\ avril\ 2008.
+ .PP
+ L'équipe de traduction a fait le maximum pour réaliser une adaptation
+ française de qualité. La version anglaise la plus à jour de ce document est
+-toujours consultable via la commande\ : «\ \fBLANG=en\ man\ 8\ makewhatis\fR\ ».
++toujours consultable via la commande\ : «\ \fBLANG=C\ man\ 8\ makewhatis\fR\ ».
+ N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute
+ erreur dans cette page de manuel.
+-
+diff -u man-1.6f.orig/man/fr/man.conf.man man-1.6f/man/fr/man.conf.man
+--- man-1.6f.orig/man/fr/man.conf.man	2006-01-26 00:19:14.000000000 +0100
++++ man-1.6f/man/fr/man.conf.man	2008-04-12 17:36:44.000000000 +0200
+@@ -1,9 +1,13 @@
+ .\" @(#)man.conf
+-.\" Traduction française René Cougnenc - Mai 1995
+ .\"
+-.TH MAN.CONF 5 "19 septembre 2005" "Manuel Linux" "Commandes utilisateur"
++.\" Traduction : René Cougnenc
++.\" 01/05/1995
++.\" Màj 07/11/2005 man-1.6e
++.\" Màj 12/04/2008 man-1.6f
++.\"
++.TH MAN.CONF 5 "19 septembre 2005" "" "Manuel de l'administrateur Linux"
+ .SH NOM
+-man.conf \- fichier de configuration de la commande man
++man.conf \- Fichier de configuration de la commande man
+ .SH DESCRIPTION
+ .LP
+ Ce fichier est lu par
+@@ -17,16 +21,17 @@
+ précisant\ :
+ .LP
+ .RS
+-man -C man.conf_personnel ...
++man \-C man.conf_personnel ...
+ .RE
+ .LP
+ Les noms de commandes peuvent comporter des options.
+-Les options utiles pour nroff se trouvent dans grotty(1).
++Les options utiles pour nroff se trouvent dans
++.BR grotty (1).
+ Par exemple, au lieu de la ligne par défaut\ :
+ .LP
+ .RS
+ .nf
+-NROFF /usr/bin/groff -mandoc -Tlatin1
++NROFF /usr/bin/groff \-mandoc \-Tlatin1
+ .fi
+ .RE
+ .LP
+@@ -34,13 +39,13 @@
+ .LP
+ .RS
+ .nf
+-NROFF /usr/bin/groff -mandoc -Tlatin1 -P-u -P-b
++NROFF /usr/bin/groff \-mandoc \-Tlatin1 \-P\-u \-P\-b
+ .fi
+ .RE
+ .LP
+ afin de supprimer le soulignement et les caractères gras.
+ 
+-Notez que l'option -Tlatin1 passée à la commande groff est importante
++Notez que l'option \-Tlatin1 passée à la commande groff est importante
+ pour nous autres, francophones\ ; associée à un visualiseur et un
+ terminal supportant ce jeu de caractères (comme less et xterm), elle
+ permet de conserver nos précieux accents dans les pages de manuel.
+@@ -62,16 +67,16 @@
+ .BR man (1)
+ et
+ .BR compress (1),
+-.BR gzip (1).
++.BR gzip (1)
+ 
+ .SH TRADUCTION
+ .PP
+-Ce document est une traduction réalisée par René Cougnenc en mai 1995 et mise
+-à jour par Alain Portal <aportal AT univ-montp2 DOT fr> le 7 novembre 2005.
++Ce document est une traduction réalisée par René Cougnenc en mai 1995, mise
++à jour par Alain Portal <aportal AT univ-montp2 DOT fr> le 7\ novembre\ 2005
++et révisée le 12\ avril\ 2008.
+ .PP
+ L'équipe de traduction a fait le maximum pour réaliser une adaptation
+ française de qualité. La version anglaise la plus à jour de ce document est
+-toujours consultable via la commande\ : «\ \fBLANG=en\ man\ 5\ man.conf\fR\ ».
++toujours consultable via la commande\ : «\ \fBLANG=C\ man\ 5\ man.conf\fR\ ».
+ N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute
+ erreur dans cette page de manuel.
+-
+diff -u man-1.6f.orig/man/fr/man.man man-1.6f/man/fr/man.man
+--- man-1.6f.orig/man/fr/man.man	2006-01-26 00:20:15.000000000 +0100
++++ man-1.6f/man/fr/man.man	2008-04-12 17:36:44.000000000 +0200
+@@ -1,12 +1,10 @@
+ .\" Man page for man (and the former manpath)
+ .\"
+ .\" Copyright (c) 1990, 1991, John W. Eaton.
+-.\" Traduction française René Cougnenc - Mai 1995 
+-.\" Mise à jour importante Alain Portal le 2 juin 2005
+ .\"
+ .\" You may distribute under the terms of the GNU General Public
+ .\" License as specified in the README file that comes with the man 1.0
+-.\" distribution.  
++.\" distribution.
+ .\"
+ .\" John W. Eaton
+ .\" jwe@che.utexas.edu
+@@ -17,14 +15,20 @@
+ .\" Many changes - aeb
+ .\" More changes - flc
+ .\"
+-.TH MAN 1 "19 septembre 2005" "Manuel Linux" "Commandes utilisateur"
++.\" Traduction : René Cougnenc
++.\" 01/05/1995
++.\" Màj 02/06/2005 man-1.6d
++.\" Màj 07/11/2005 man-1.6e
++.\" Màj 12/04/2008 man-1.6f
++.\"
++.TH MAN 1 "19 septembre 2005" "" "Manuel de l'utilisateur Linux"
+ .LO 1
+ .SH NOM
+-man \- formate et affiche les pages du manuel en ligne
++man \- Formater et afficher les pages du manuel en ligne
+ .SH SYNOPSIS
+-.B man 
++.B man
+ .RB [ \-acdfFhkKtwW ]
+-.RB [ --path ]
++.RB [ \-\-path ]
+ .RB [ \-m
+ .IR système ]
+ .RB [ \-p
+@@ -43,7 +47,6 @@
+ .IR liste_sections ]
+ .RI [ section ]
+ .I "nom ..."
+-
+ .SH DESCRIPTION
+ .B man
+ formate et affiche les pages du manuel en ligne. Si
+@@ -60,12 +63,39 @@
+ il sera d'abord considéré en tant que nom de fichier, vous pouvez donc faire\ :
+ .B "man ./toto.5"
+ ou même
+-.B "man /truc/machin/bidule.1.gz\fR.\fP"
++.BR "man /truc/machin/bidule.1.gz .
+ .PP
+ Voir plus loin pour une description sur la façon dont
+ .B man
+ cherche les fichiers pages de manuel.
+- 
++.SH SECTIONS DE MANUEL
++Les sections standards de manuel sont les suivantes\ :
++.TP
++.B 1
++Commandes utilisateur
++.TP
++.B 2
++Appels système
++.TP
++.B 3
++Fonctions de bibliothèque C
++.TP
++.B 4
++Périphériques et fichiers spéciaux
++.TP
++.B 5
++Formats de fichier et conventions
++.TP
++.B 6
++Jeux
++.TP
++.B 7
++Divers
++.TP
++.B 8
++Outils d'administration système et démons
++.TP
++Les distributions personnalisent le manuel en introduisant de nouvelles sections.
+ .SH OPTIONS
+ .TP
+ .B \-\^C " fichier_config"
+@@ -75,8 +105,9 @@
+ .BR man.conf (5).)
+ .TP
+ .B \-\^M " chemin"
+-Indique la liste des répertoires dans lesquels la recherche des pages 
+-sera effectuée. Veuillez séparer les répertoires par le symbole deux points
++Indique la liste des répertoires dans lesquels la recherche des pages
++sera effectuée.
++Veuillez séparer les répertoires par le symbole deux points
+ .RB " «\ ": \ ».
+ Une liste vide est équivalent à ne pas spécifier l'option
+ .BR \-M .
+@@ -90,7 +121,7 @@
+ qui, à son tour, a priorité sur la variable d'environnement
+ .BR PAGER .
+ Par défaut,
+-.B man 
++.B man
+ utilisera
+ .B @pager@.
+ .TP
+@@ -115,27 +146,27 @@
+ .B \-\^S " liste_sections"
+ Il s'agit d'une liste de sections, séparées par le symbole deux points
+ .RB " «\ ": \ »,
+-dans lesquelles les pages seront recherchées. Elle a priorité sur
+-la variable d'environnement
++dans lesquelles les pages seront recherchées.
++Elle a priorité sur la variable d'environnement
+ .B MANSECT.
+ .TP
+ .B \-\^a
+ Par défaut,
+ .B man 
+-s'arrête après avoir affiché la première page de
+-manuel trouvée. Cette option permet de l'obliger à afficher toutes
++s'arrête après avoir affiché la première page de manuel trouvée.
++Cette option permet de l'obliger à afficher toutes
+ les pages correspondant à la requête
+ .RB " «\ "nom \ »
+ de l'utilisateur, s'il y en a plusieurs, et pas seulement la première trouvée.
+ .TP
+ .B \-\^c
+-Reformater la page de manuel, même si une version préformatée à jour
+-existe. Cela peut être utile si cette dernière a été prévue pour un
++Reformater la page de manuel, même si une version préformatée à jour existe.
++Cela peut être utile si cette dernière a été prévue pour un
+ écran de taille différente ou bien si elle est abîmée.
+ .TP
+ .B \-\^d
+-Ne pas afficher les pages de manuel, mais fournir une grande quantité
+-d'informations de débogage.
++Ne pas afficher les pages de manuel,
++mais fournir une grande quantité d'informations de débogage.
+ .TP
+ .B \-\^D
+ Afficher à la fois les pages de manuel et les informations de débogage.
+@@ -152,14 +183,15 @@
+ .B apropos.
+ .TP
+ .B \-\^K
+-Chercher la chaîne spécifiée dans *toutes* les pages de manuel. Attention\ :
+-cela peut être très long\ ! Et il peut être utile de spécifier une section.
+-(Pour donner une vague idée, sur ma machine, il faut environ une minute
+-pour 500 pages de manuel.)
++Chercher la chaîne spécifiée dans *toutes* les pages de manuel.
++Attention\ : cela peut être très long\ !
++Et il peut être utile de spécifier une section.
++(Pour donner une vague idée, sur ma machine,
++il faut environ une minute pour 500 pages de manuel.)
+ .TP
+ .B \-\^m " système"
+-Demander l'utilisation d'un autre jeu de pages de manuel, en fonction
+-du nom de système indiqué.
++Demander l'utilisation d'un autre jeu de pages de manuel,
++en fonction du nom de système indiqué.
+ .TP
+ .B \-\^p " chaîne"
+ Spécifie la séquence de préprocesseurs à exécuter avant
+@@ -167,8 +199,8 @@
+ ou
+ .BR troff .
+ Selon votre installation de Linux, vous ne disposerez pas forcément
+-de tous les programmes possibles. Voici les  plus courants et les lettres
+-qui les désignent\ :
++de tous les programmes possibles.
++Voici les  plus courants et les lettres qui les désignent\ :
+ eqn (e), grap (g), pic (p), tbl (t), vgrind (v), refer (r).
+ Cette option a priorité sur la variable d'environnement
+ .B MANROFFSEQ.
+@@ -177,8 +209,8 @@
+ Utiliser
+ .B @troff@
+ pour formater la page de manuel, la sortie se faisant sur
+-.B stdout.
+-La sortie de 
++.BR stdout .
++La sortie de
+ .B @troff@
+ peut nécessiter un passage par certains filtres avant de pouvoir
+ être affichée ou imprimée.
+@@ -191,18 +223,17 @@
+ recherche les pages. Si
+ .B manpath
+ est un lien sur le programme man, alors «\ manpath\ » est équivalent
+-à la commande «\ man --path\ ».
++à la commande «\ man \-\-path\ ».
+ .TP
+ .B \-\^W
+ Comme \-\^w, mais affiche les noms de fichiers, un par ligne, sans aucune
+ autre information. Très utile dans des commandes shell du genre\ :
+ .ft CW
+-.B man -aW man | xargs ls -l
++.B man \-aW man | xargs ls \-l
+ .ft
+-
+ .SH "PAGES FORMATÉES"
+-Afin de gagner du temps, 
+-.B man 
++Afin de gagner du temps,
++.B man
+ tente de sauvegarder les pages formatées
+ au lieu de les interpréter chaque fois qu'elles sont demandées.
+ Traditionnellement, les versions formatées des pages de REP/manX sont
+@@ -235,7 +266,6 @@
+ .B \-c
+ force le reformatage d'une page, même si un fichier cat
+ plus récent que le fichier source existe.
+-
+ .SH "CHEMIN DE RECHERCHE POUR LES PAGES DE MANUEL"
+ .B man
+ utilise une méthode sophistiquée pour chercher les pages de manuels,
+@@ -284,7 +314,7 @@
+ .BR MANPATH ,
+ .B man
+ développe sa propre liste de chemins basée sur le contenu du fichier de
+-configuration 
++configuration
+ .BR @man_config_file@ .
+ Les déclarations
+ .B MANPATH
+@@ -341,8 +371,8 @@
+ .BI cat N
+ où
+ .I N
+-est le numéro de la section du manuel. Si le fichier se trouve dans
+-le sous-répertoire
++est le numéro de la section du manuel.
++Si le fichier se trouve dans le sous-répertoire
+ .B cat
+ .IR N ,
+ .B man
+@@ -357,14 +387,13 @@
+ Si vous vouloir savoir où (ou si)
+ .B man
+ peut trouver une page de manuel sur un sujet particulier, utilisez l'option
+-.BR "--path " ( -w ).
+-
++.BR "\-\-path " ( \-w ).
+ .SH ENVIRONNEMENT
+ .TP
+ .B MANPATH
+ Si la variable
+ .B MANPATH
+-est positionnée,
++est définie,
+ .B man
+ utilisera sa valeur comme chemin de recherche des pages de manuel.
+ Cette variable est prioritaire sur le fichier de configuration et le chemin
+@@ -376,13 +405,13 @@
+ .B MANPL
+ Si la variable
+ .B MANPL
+-est positionnée, sa valeur servira à définir la longueur de l'affichage de la
++est définie, sa valeur servira à définir la longueur de l'affichage de la
+ page. Autrement, la page entière est affichée sur une seule et longue page.
+ .TP
+ .B MANROFFSEQ
+ Si
+ .B MANROFFSEQ
+-est positionnée, sa valeur servira à déterminer le jeu de préprocesseurs
++est définie, sa valeur servira à déterminer le jeu de préprocesseurs
+ à exécuter avant de lancer
+ .B nroff
+ ou
+@@ -393,29 +422,29 @@
+ .B MANSECT
+ Si
+ .B MANSECT
+-est positionnée, sa valeur déterminera les sections du manuel dans
++est définie, sa valeur déterminera les sections du manuel dans
+ lesquelles les pages seront recherchées.
+ .TP
+ .B MANWIDTH
+ Si
+ .B MANWIDTH
+-est positionnée, sa valeur servira à définir la largeur de l'affichage de la
++est définie, sa valeur servira à définir la largeur de l'affichage de la
+ page. Autrement, la page sera affichée sur toute la largeur de l'écran.
+ .TP
+ .B MANPAGER
+ Si
+ .B MANPAGER
+-est positionnée, sa valeur sera considérée comme le nom du programme
++est définie, sa valeur sera considérée comme le nom du programme
+ à utiliser pour visualiser la page de manuel. Dans le cas contraire,
+ .B PAGER
+-sera utilisée. Si aucune des deux variables n'est positionnée,
++sera utilisée. Si aucune des deux variables n'est définie,
+ .B @pager@
+ sera utilisé.
+ .TP
+ .B LANG
+ Si
+ .B LANG
+-est positionnée, sa valeur définira le nom du sous-répertoire où
++est définie, sa valeur définira le nom du sous-répertoire où
+ .B man
+ commencera la recherche des pages de manuel. Ainsi, la commande
+ «\ LANG=fr man 1 toto\ » aura pour effet de faire rechercher la page
+@@ -450,7 +479,7 @@
+ est employée pour obtenir le nom du système alternatif par défaut (en vue de
+ l'utilisation de l'option 
+ .B \-m
+-). 
++).
+ .SH BOGUES
+ L'option
+ .B \-t
+@@ -482,15 +511,15 @@
+ .BR whatis (1),
+ .BR less (1),
+ .BR groff (1),
+-.BR man.conf (5).
++.BR man.conf (5)
+ .SH TRADUCTION
+ .PP
+-Ce document est une traduction réalisée par René Cougnenc en mai 1995 et mise
+-à jour par Alain Portal <aportal@univ-montp2.fr> le 7 novembre 2005.
++Ce document est une traduction réalisée par René Cougnenc en mai 1995, mise
++à jour par Alain Portal <aportal AT univ-montp2 DOT fr> le 7\ novembre\ 2005
++et révisée le 12\ avril\ 2008.
+ .PP
+ L'équipe de traduction a fait le maximum pour réaliser une adaptation
+ française de qualité. La version anglaise la plus à jour de ce document est
+-toujours consultable via la commande\ : «\ \fBLANG=en\ man\ 1\ man\fR\ ».
++toujours consultable via la commande\ : «\ \fBLANG=C\ man\ 1\ man\fR\ ».
+ N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute
+ erreur dans cette page de manuel.
+-
+diff -u man-1.6f.orig/man/fr/whatis.man man-1.6f/man/fr/whatis.man
+--- man-1.6f.orig/man/fr/whatis.man	2006-01-26 00:21:15.000000000 +0100
++++ man-1.6f/man/fr/whatis.man	2008-04-12 17:36:44.000000000 +0200
+@@ -1,11 +1,10 @@
+ .\" Man page for whatis
+ .\"
+ .\" Copyright (c) 1990, 1991, John W. Eaton.
+-.\" Traduction française René Cougnenc - Mai 1995.
+ .\"
+ .\" You may distribute under the terms of the GNU General Public
+ .\" License as specified in the README file that comes with the man 1.0
+-.\" distribution.  
++.\" distribution.
+ .\"
+ .\" John W. Eaton
+ .\" jwe@che.utexas.edu
+@@ -13,37 +12,42 @@
+ .\" The University of Texas at Austin
+ .\" Austin, Texas  78712
+ .\"
+-.TH WHATIS 1 "19 septembre 2005" "Manuel Linux" "Commandes utilisateur" 
++.\" Traduction : René Cougnenc
++.\" 01/05/1995
++.\" Màj 07/11/2005 man-1.6e
++.\" Màj 12/04/2008 man-1.6f
++.\"
++.TH WHATIS 1 "19 septembre 2005" "" "Manuel de l'utilisateur Linux"
+ .LO 1
+ .SH NOM
+-whatis \- recherche de noms complets dans la base de données whatis.
++whatis \- Rechercher des noms complets dans la base de données whatis
+ .SH SYNOPSIS
+ .BI whatis
+ mot-clé ...
+ .SH DESCRIPTION
+-whatis effectue une recherche de mots-clés dans un ensemble de
+-fichiers de données contenant de brèves descriptions des commandes
+-système, et affiche le résultat sur la sortie standard. Seules les
+-entrées contenant le mot-clé complet sont affichées.
++.B whatis
++effectue une recherche de mots-clés dans un ensemble de fichiers de données
++contenant de brèves descriptions des commandes système,
++et affiche le résultat sur la sortie standard.
++Seules les entrées contenant le mot-clé complet sont affichées.
+ .LP
+ La base de données whatis est réalisée et mise à jour par la commande
+ @makewhatis@.
+-
+ .SH AUTEUR
+ John W. Eaton est l'auteur historique de
+ .BR man .
+ Federico Lucifredi <flucifredi@acm.org> en assure aujourd'hui la maintenance.
+ .SH "VOIR AUSSI"
+ .BR apropos (1),
+-.BR man (1).
+-
++.BR man (1)
+ .SH TRADUCTION
+ .PP
+-Ce document est une traduction réalisée par René Cougnenc en mai 1995 et mise
+-à jour par Alain Portal <aportal@univ-montp2.fr> le 7 novembre 2005.
++Ce document est une traduction réalisée par René Cougnenc en mai 1995, mise
++à jour par Alain Portal <aportal@univ-montp2.fr> le 7\ novembre\ 2005
++et révisée le 12\ avril\ 2008.
+ .PP
+ L'équipe de traduction a fait le maximum pour réaliser une adaptation
+ française de qualité. La version anglaise la plus à jour de ce document est
+-toujours consultable via la commande\ : «\ \fBLANG=en\ man\ 1\ whatis\fR\ ».
++toujours consultable via la commande\ : «\ \fBLANG=C\ man\ 1\ whatis\fR\ ».
+ N'hésitez pas à signaler à l'auteur ou au traducteur, selon le cas, toute
+ erreur dans cette page de manuel.

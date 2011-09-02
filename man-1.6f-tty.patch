@@ -1,0 +1,16 @@
+diff -up man-1.6f/src/man.c.pom man-1.6f/src/man.c
+--- man-1.6f/src/man.c.pom	2008-06-02 13:52:45.000000000 +0200
++++ man-1.6f/src/man.c	2008-06-02 13:55:08.000000000 +0200
+@@ -923,8 +923,11 @@ display_man_file(const char *path, const
+      if (do_troff)
+ 	  command = my_xsprintf ("(cd \"%S\" && %s)", path, roff_command);
+      else
+-	  command = my_xsprintf ("(cd \"%S\" && %s | %s)", path,
++          if (isatty(1))
++	      command = my_xsprintf ("(cd \"%S\" && %s | %s)", path,
+ 		   roff_command, pager);
++	  else 
++	      command = my_xsprintf ("(cd \"%S\" && %s)", path, roff_command);
+ 
+      return !do_system_command (command, 0);
+ }

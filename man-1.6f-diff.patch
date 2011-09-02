@@ -1,0 +1,69 @@
+diff -up man-1.6f/src/different.c.orig man-1.6f/src/different.c
+--- man-1.6f/src/different.c.orig	2009-12-01 09:48:00.000000000 +0100
++++ man-1.6f/src/different.c	2009-12-01 09:53:28.000000000 +0100
+@@ -35,6 +35,41 @@ is_different(const char *file, struct fi
+     return 1;
+ }
+ 
++int free_cat_filelist(void) {
++    struct filelist *acct, *next;
++
++    acct = &cat_list;
++    while (acct->next != NULL) {
++	next = acct->next;
++	if (acct != &cat_list)
++	    free(acct);
++	acct = next;
++    }
++
++    if (acct != &cat_list)
++	free(acct);
++    cat_list.next = NULL;
++
++    return 0;
++}
++
++int free_man_filelist(void) {
++    struct filelist *acct, *next;
++
++    acct = &man_list;
++    while (acct->next != NULL) {
++	next = acct->next;
++	if (acct != &man_list)
++	    free(acct);
++	acct = next;
++    }
++    if (acct != &man_list)
++	free(acct);
++    man_list.next = NULL;
++
++    return 0;
++}
++
+ int
+ different_cat_file (const char *file) {
+     return is_different (file, &cat_list);
+diff -up man-1.6f/src/different.h.orig man-1.6f/src/different.h
+--- man-1.6f/src/different.h.orig	2009-12-01 09:48:00.000000000 +0100
++++ man-1.6f/src/different.h	2009-12-01 09:42:59.000000000 +0100
+@@ -1,2 +1,5 @@
+ int different_cat_file (const char *file);
+ int different_man_file (const char *file);
++int free_cat_filelist(void);
++int free_man_filelist(void);
++
+diff -up man-1.6f/src/man.c.orig man-1.6f/src/man.c
+--- man-1.6f/src/man.c.orig	2009-12-01 09:48:00.000000000 +0100
++++ man-1.6f/src/man.c	2009-12-01 09:56:33.000000000 +0100
+@@ -1410,6 +1410,11 @@ main (int argc, char **argv) {
+ 			 gripe (NO_SUCH_ENTRY, nextarg);
+ 	       }
+ 	  }
++	/* it is necessary to free the lists of found man pages
++	   #542852 - 'man cut cut' throws an error */
++	free_cat_filelist();
++	free_man_filelist();
++
+      }
+      return status ? EXIT_SUCCESS : EXIT_FAILURE;
+ }

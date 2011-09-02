@@ -1,0 +1,12 @@
+diff -up man-1.6f/src/Makefile.in.pom man-1.6f/src/Makefile.in
+--- man-1.6f/src/Makefile.in.pom	2010-06-24 13:44:55.000000000 +0200
++++ man-1.6f/src/Makefile.in	2010-06-24 13:47:00.000000000 +0200
+@@ -25,7 +25,7 @@ CWARNNP = -Wall
+ 	$(CC) -c $(CWARN) $(CFLAGS) -I. $(DEFS) $<
+ 
+ # LDFLAGS = -g
+-LDFLAGS ?= -s
++LDFLAGS =
+ 
+ LIBOBJS = @LIBOBJS@
+ 

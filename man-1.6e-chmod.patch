@@ -1,0 +1,20 @@
+--- man-1.6e/src/Makefile.in.chmod	2007-03-12 13:23:49.000000000 +0100
++++ man-1.6e/src/Makefile.in	2007-03-12 13:32:05.000000000 +0100
+@@ -96,6 +96,8 @@
+ 	cp makewhatis.sh makewhatis.in
+ 	../conf_script makewhatis
+ 	chmod +x makewhatis
++	cat makewhatis |sed -e '1,+3d' >makewhatis.aux
++	mv makewhatis.aux makewhatis
+ 
+ MANCONFIG=$(DESTDIR)$(PREFIX)@man_config_file@
+ 
+@@ -106,7 +108,7 @@
+ 	$(INSTALL) -c -m 755 whatis $(DESTDIR)$(PREFIX)@whatis@
+ 	$(INSTALL) -c -m 755 man2dvi $(DESTDIR)$(PREFIX)@man2dvi@
+ 	mkdir -p $(DESTDIR)$(PREFIX)@sbindir@
+-	$(INSTALL) -c -m 754 makewhatis $(DESTDIR)$(PREFIX)@makewhatis@
++	$(INSTALL) -c -m 755 makewhatis $(DESTDIR)$(PREFIX)@makewhatis@
+ 	mkdir -p $(DESTDIR)$(PREFIX)@man_config_dir@
+ 	if [ -f $(MANCONFIG) ]; then mv $(MANCONFIG) $(MANCONFIG).orig; fi
+ 	$(INSTALL) -c -m 644 man.conf $(MANCONFIG)

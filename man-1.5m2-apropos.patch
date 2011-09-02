@@ -1,0 +1,14 @@
+--- man-1.5m2/src/apropos.sh.orig	2004-01-19 16:56:47.000000000 -0500
++++ man-1.5m2/src/apropos.sh	2004-01-19 16:57:36.000000000 -0500
+@@ -19,9 +19,9 @@
+ 
+ # When man pages in your favorite locale look to grep like binary files
+ # (and you use GNU grep) you may want to add the 'a' option to *grepopt1.
+-aproposgrepopt1='i'
++aproposgrepopt1='ai'
+ aproposgrepopt2=''
+-whatisgrepopt1='iw'
++whatisgrepopt1='aiw'
+ whatisgrepopt2='^'
+ grepopt1=$%apropos_or_whatis%grepopt1
+ grepopt2=$%apropos_or_whatis%grepopt2

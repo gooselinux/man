@@ -1,0 +1,12 @@
+diff -up man-1.6f/src/makewhatis.sh.vari man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.vari	2010-02-01 13:30:11.000000000 +0100
++++ man-1.6f/src/makewhatis.sh	2010-02-01 13:49:46.000000000 +0100
+@@ -79,7 +79,7 @@ then
+ # make sure TMPFILE is deleted if program is killed or terminates
+ # (just delete this line if your shell doesnt know about trap)
+ trap "rm -rf $TMPFILE" 0 
+-trap "rm -rf $TMPFILEDIR; exit 255" 1 2 3 15
++trap "rm -rf $TMPFILE; exit 255" 1 2 3 15
+ 
+ # default find arg: no directories, no empty files
+ findarg0="-type f -size +0"

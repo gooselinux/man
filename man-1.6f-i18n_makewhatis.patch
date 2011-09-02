@@ -1,0 +1,189 @@
+diff -up man-1.6f/src/makewhatis.sh.i18n_makewhatis man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.i18n_makewhatis	2007-09-17 20:35:14.000000000 +0200
++++ man-1.6f/src/makewhatis.sh	2008-09-01 16:06:05.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # makewhatis: create the whatis database
+ # Created: Sun Jun 14 10:49:37 1992
+ # Revised: Sat Jan  8 14:12:37 1994 by faith@cs.unc.edu
+@@ -61,32 +61,19 @@ do
+ done
+ DEFCATPATH=$dc
+ 
+-# In case /usr is read-only, make /usr/foo/whatis (etc) a symlink to
+-# something like /var/cache/man/foo-whatis.
+-# Some distributions make a single big /var/cache/man/whatis file,
+-# but that leads to problems and bugs.
++# make a single big /var/cache/man/whatis file,
++DEFWHATIS=/var/cache/man/whatis
+ 
+-# AWK=/usr/bin/gawk
+ AWK=@awk@
+ 
+-# Find a place for our temporary files. If security is not a concern, use
+-#	TMPFILE=/tmp/whatis$$; TMPFILEDIR=none
+-# Of course makewhatis should only have the required permissions
+-# (for reading and writing directories like /usr/man).
+-# We try here to be careful (and avoid preconstructed symlinks)
+-# in case makewhatis is run as root, by creating a subdirectory of /tmp.
+-
+-TMPFILEDIR=/tmp/whatis.tmp.dir.$$
+-rm -rf $TMPFILEDIR
+-if ! mkdir -m 0700 $TMPFILEDIR; then
+-    echo Could not create $TMPFILEDIR
+-    exit 1;
+-fi
+-TMPFILE=$TMPFILEDIR/w
++# Find a place for our temporary files.
++
++if TMPFILE=$(mktemp /tmp/whatis.XXXXXX)
++then
+ 
+-# make sure TMPFILEDIR is deleted if program is killed or terminates
++# make sure TMPFILE is deleted if program is killed or terminates
+ # (just delete this line if your shell doesnt know about trap)
+-trap "rm -rf $TMPFILEDIR" 0
++trap "rm -rf $TMPFILE" 0 
+ trap "rm -rf $TMPFILEDIR; exit 255" 1 2 3 15
+ 
+ # default find arg: no directories, no empty files
+@@ -98,15 +85,17 @@ defmanpath=$DEFMANPATH
+ defcatpath=
+ 
+ if [ -n "$MANSECT" ]; then
+-	sections=$MANSECT
++        sections=$MANSECT
+ else
+-	sections=`$AWK '($1 == "MANSECT") { print $2 }' @man_config_file@`
+-	if [ x"$sections" = x ]; then
+-		sections="@sections@"
+-	fi
++        sections=`$AWK '($1 == "MANSECT") { print $2 }' @man_config_file@`
++        if [ x"$sections" = x ]; then
++                sections="@sections@"
++        fi
+ fi
+ sections=`echo $sections | sed -e 's/:/ /g'`
+ 
++whatisdb=$DEFWHATIS
++
+ for name in "$@"
+ do
+ if [ -n "$setsections" ]; then
+@@ -114,6 +103,11 @@ if [ -n "$setsections" ]; then
+ 	sections=$name
+ 	continue
+ fi
++if [ -n "$setwhatis" ]; then
++       setwhatis=
++       whatisdb=$name
++       continue
++fi
+ case $name in
+     --version|-V)
+ 	echo "$program from @version@"
+@@ -124,6 +118,8 @@ case $name in
+ 	continue;;
+     -s) setsections=1
+ 	continue;;
++    -o) setwhatis=1
++        continue;;
+     -u) findarg="-ctime 0"
+ 	update=1
+ 	continue;;
+@@ -132,12 +128,13 @@ case $name in
+     -w) manpath=`man --path`
+ 	catpath=$manpath
+ 	continue;;
+-    -*) echo "Usage: makewhatis [-s sections] [-u] [-v] [-w] [manpath] [-c [catpath]]"
++    -*) echo "Usage: makewhatis [-s sections] [-u] [-v] [-w] [manpath] [-c [catpath]] [-o whatisdb]"
+ 	echo "       This will build the whatis database for the man pages"
+ 	echo "       found in manpath and the cat pages found in catpath."
+         echo "       -s: sections (default: $sections)"
+ 	echo "       -u: update database with new pages"
+ 	echo "       -v: verbose"
++        echo "       -o: location of whatis database (default: $DEFWHATIS)"
+ 	echo "       -w: use manpath obtained from \`man --path\`"
+ 	echo "       [manpath]: man directories (default: $DEFMANPATH)"
+ 	echo "       [catpath]: cat directories (default: the first existing"
+@@ -165,14 +162,7 @@ catpath=`echo ${catpath} | tr : ' '`
+ # first truncate all the whatis files that will be created new,
+ # then only update - we might visit the same directory twice
+ if [ x$update = x ]; then
+-   for pages in man cat
+-   do
+-      eval path="\$$pages"path
+-      for mandir in $path
+-      do
+-	 cp /dev/null $mandir/whatis
+-      done
+-   done
++   cp /dev/null $whatisdb
+ fi
+ 
+ for pages in man cat
+@@ -212,11 +202,6 @@ do
+ 	fi
+      fi
+ 
+-     if [ -s ${mandir}/whatis -a $pages = man -a x$update = x ]; then
+-	if [ x$verbose != x ]; then
+-	   echo skipping $mandir - we did it already > /dev/stderr
+-	fi
+-     else      
+        here=`pwd`
+        cd $mandir
+        for i in $sections
+@@ -227,7 +212,23 @@ do
+ 	    section=$i
+ 	    curdir=$mandir/${pages}$i
+ 	    export section verbose curdir
+-	    find $mandir/${pages}$i/. -name '*' $findarg0 $findarg -print | $AWK '
++
++	   utf8=
++            for x in $(find $mandir/${pages}$i -name '*' $findarg0 $findarg)
++            do
++               if [ ${x%.gz} != ${x} ]
++               then
++                  cat=zcat
++               elif [ ${x%.bz2} != ${x} ]
++               then
++                  cat=bzcat
++               else
++                  cat=cat
++               fi
++   
++               if ${cat} ${x} | iconv -f utf-8 -t utf-8 -o /dev/null 2>/dev/null
++               then
++                  echo ${x} | $AWK '
+ 
+ 	    function readline() {
+               if (use_zcat || use_bzcat || use_lzcat) {
+@@ -439,18 +440,19 @@ do
+ 
+        cd "$here"
+ 
+-       if [ -f ${mandir1}/whatis ]
++       if [ -f ${whatisdb} ]
+        then
+-	 cat ${mandir1}/whatis >> $TMPFILE
++         cat ${whatisdb} >> $TMPFILE
+        fi
+-       tr -s '\n' < $TMPFILE | sort -u > ${mandir1}/whatis
++       tr -s '\n' < $TMPFILE | sort -u > ${whatisdb}
+ 
+-       chmod 644 ${mandir1}/whatis
+-       rm $TMPFILE
+-     fi
++       chmod 644 ${whatisdb}
+    done
+ done
+ 
+ # remove tempdir
+-rm -rf $TMPFILEDIR
++rm -rf $TMPFILE
+ 
++else            # we're here if TMPFILE creation failed
++    exit 1
++fi

@@ -1,0 +1,12 @@
+diff -up man-1.6f/src/makewhatis.sh.use man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.use	2009-08-11 09:21:11.000000000 +0200
++++ man-1.6f/src/makewhatis.sh	2009-08-11 09:26:40.000000000 +0200
+@@ -257,7 +257,7 @@ do
+ 			 match(filename,"\\.z$") || match(filename,"\\.gz$");
+ 	      if (!use_zcat)
+ 		use_bzcat = match(filename,"\\.bz2");
+-              if(!use_bzcat)
++              if(!use_bzcat && !use_zcat)
+                 use_lzcat = match(filename,"\\.lzma");
+               if (use_zcat || use_bzcat || use_lzcat ) {
+ 		filename_no_gz = substr(filename, 0, RSTART - 1);

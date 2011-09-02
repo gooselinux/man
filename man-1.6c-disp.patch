@@ -1,0 +1,11 @@
+--- man-1.6c/src/man.c.pom	2006-04-14 12:32:06.000000000 +0200
++++ man-1.6c/src/man.c	2006-05-02 09:59:02.000000000 +0200
+@@ -137,7 +137,7 @@
+ static int
+ setll(void) {
+      return
+-	  (!do_troff && (line_length < 66 || line_length > 80)) ?
++	  (!do_troff && (line_length != 80)) ?
+ 	  line_length*9/10 : 0;
+ }
+ 

@@ -1,0 +1,17 @@
+--- man-1.6f/src/makewhatis.sh	2007-09-17 20:35:14.000000000 +0200
++++ man-1.6f/src/makewhatis.sh_pipe	2008-03-12 17:53:34.000000000 +0100
+@@ -281,11 +281,11 @@
+ 	      sub(/\..*/, "", progname);
+               if (use_zcat || use_bzcat || use_lzcat) {
+ 		if (use_zcat) {
+-		  pipe_cmd = "zcat \"" filename "\"";
++		  pipe_cmd = "zcat \"" filename "\" 2>/dev/null";
+                 } else if (use_bzcat) {
+-		  pipe_cmd = "bzcat \"" filename "\"";
++		  pipe_cmd = "bzcat \"" filename "\" 2>/dev/null";
+                 } else {
+-                  pipe_cmd = "lzcat \"" filename "\"";
++                  pipe_cmd = "lzcat \"" filename "\" 2>/dev/null";
+                 }
+ 		# try to avoid suspicious stuff
+ 		if (filename ~ /[;&|`$(]/) {

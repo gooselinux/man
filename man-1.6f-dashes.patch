@@ -1,0 +1,12 @@
+diff -up man-1.6f/src/makewhatis.sh.dash man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.dash	2008-09-01 17:37:13.000000000 +0200
++++ man-1.6f/src/makewhatis.sh	2008-09-01 17:37:13.000000000 +0200
+@@ -415,7 +415,7 @@ do
+ 	      sub(/ $/, "", x);               # Kill trailing spaces (again)
+ 	      sub(/\.$/, "", x);              # Kill trailing period
+ 
+-	      if (!match(x, / - /))
++      if (!match(x, / --? /))
+ 		return;
+ 
+ 	      after_dash = substr(x, RSTART);

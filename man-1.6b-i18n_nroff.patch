@@ -1,0 +1,270 @@
+--- man-1.6b/configure.nroff	2005-11-10 10:02:58.000000000 +0100
++++ man-1.6b/configure	2005-11-10 10:29:55.971053960 +0100
+@@ -405,10 +405,8 @@
+   done
+   troff=""
+   nroff=""
+-  jnroff=""
+   eqn=""
+   neqn=""
+-  jneqn=""
+   tbl=""
+   col=""
+   vgrind=""
+@@ -467,25 +465,23 @@
+   then
+     if test $Fnroff = "missing"
+     then
+-      nroff="nroff -Tlatin1 -mandoc"
++      nroff="nroff  -mandoc 2>/dev/null"
+     else
+-      nroff="$Fnroff -Tlatin1 -mandoc"
++      nroff="$Fnroff -mandoc 2>/dev/null"
+     fi
+     troff="troff -mandoc"
+     echo "Warning: could not find groff"
+   else
+     if test $Fnroff = "missing"
+     then
+-      nroff="$Fgroff -Tlatin1 -mandoc"
++      nroff="$Fgroff -Tutf8 -mandoc"
+     else
+-      nroff="$Fnroff -Tlatin1 -mandoc"
++      nroff="$Fnroff -mandoc 2>/dev/null"
+     fi
+     troff="$Fgroff -Tps -mandoc"
+-    jnroff="$Fgroff -Tnippon -mandocj"
+   fi
+   eqn="$Fgeqn -Tps"
+-  neqn="$Fgeqn -Tlatin1"
+-  jneqn="$Fgeqn -Tnippon"
++  neqn="$Fgeqn -Tutf8"
+   tbl="$Fgtbl"
+   col="$Fcol"
+   vgrind="$Fvgrind"
+@@ -518,7 +514,7 @@
+   cat="$Fcat"
+   awk="$Fawk"
+ 
+-  FILTERS="troff nroff jnroff eqn neqn jneqn tbl col vgrind refer grap pic pager browser htmlpager cmp cat awk"
++  FILTERS="troff nroff eqn neqn tbl col vgrind refer grap pic pager browser htmlpager cmp cat awk"
+ fi
+ 
+ # Note: older nroff gives an error message for -c
+@@ -526,7 +522,6 @@
+ if [ "x$set_compatibility_mode_for_colored_groff" = "xtrue" ]; then
+     troff="$troff -c"
+     nroff="$nroff -c"
+-    jnroff="$jnroff -c"
+ fi
+ 
+ if [ x$default = x ]; then
+@@ -1281,10 +1276,8 @@
+ s,@LIBOBJS@,$LIBOBJS,
+ s,@troff@,$troff,
+ s,@nroff@,$nroff,
+-s,@jnroff@,$jnroff,
+ s,@eqn@,$eqn,
+ s,@neqn@,$neqn,
+-s,@jneqn@,$jneqn,
+ s,@tbl@,$tbl,
+ s,@nocol@,$nocol,
+ s,@pcol@,$pcol,
+--- man-1.6b/src/man.c.nroff	2005-08-21 01:26:06.000000000 +0200
++++ man-1.6b/src/man.c	2005-11-10 10:53:04.778923072 +0100
+@@ -80,8 +80,7 @@
+ int fsstnd;
+ int noautopath;
+ int nocache;
+-static int is_japanese;
+-static char *language;
++
+ static char **section_list;
+ 
+ #ifdef DO_COMPRESS
+@@ -442,7 +441,7 @@
+ }
+ 
+ static int
+-is_lang_page (char *lang, const char *file) {
++is_lang_page (const char *lang, const char *file) {
+ 	char lang_path[16] = "";
+ 
+ 	snprintf(lang_path, sizeof(lang_path), "/%s/", lang);
+@@ -457,22 +456,75 @@
+ 	return 0;
+ }
+ 
++/* we need to pass, as a parameter, what the character set of a man page
++ * is likely to be if it is not utf-8, so that nroff can iconv it to utf-8.
++ *
++ * the character set/encoding is "guessed" based on the most common non-Unicode
++ * encoding used for man pages.
++ */
++
++typedef struct {
++    const char *lang;
++    const char *encoding;
++} lc2enc_t;
++
++static const lc2enc_t lc2enc[] = {
++    { "C",     "ASCII"      },
++    { "de",    "ISO-8859-1" },
++    { "en",    "ISO-8859-1" },
++    { "es",    "ISO-8859-1" },
++    { "fr",    "ISO-8859-1" },
++    { "it",    "ISO-8859-1" },
++    { "pt",    "ISO-8859-1" },
++    { "hr",    "ISO-8859-2" },
++    { "cs",    "ISO-8859-2" },
++    { "et",    "ISO-8859-2" },
++    { "hu",    "ISO-8859-2" },
++    { "lv",    "ISO-8859-2" },
++    { "lt",    "ISO-8859-2" },
++    { "pl",    "ISO-8859-2" },
++    { "ro",    "ISO-8859-2" },
++    { "sk",    "ISO-8859-2" },
++    { "sl",    "ISO-8859-2" },
++    { "bg",    "CP1251"     },
++    { "be",    "KOI8-R"     },
++    { "mk",    "KOI8-R"     },
++    { "ru",    "KOI8-R"     },
++    { "sh",    "KOI8-R"     },
++    { "uk",    "KOI8-R"     },
++    { "el",    "ISO-8859-7" },
++    { "tr",    "ISO-8859-9" },
++    { "ja",    "EUC-JP"     },
++    { "ko",    "EUC-KR"     },
++    { "zh_CN", "GB2312"     },
++    { "zh_HK", "BIG5"       },
++    { "zh_TW", "BIG5"       },
++    { NULL }
++};
++
++static const char *
++get_legacy_encoding(const char *file) {
++    const lc2enc_t *ptr;
++
++    for (ptr = lc2enc; ptr->lang != NULL; ptr++) {
++        if (is_lang_page(ptr->lang, file)) {
++            return ptr->encoding;
++        }
++    }
++    return "ISO-8859-1";
++}
++
+ static int
+ parse_roff_directive (char *cp, const char *file, char *buf, int buflen) {
+      char c;
+      int tbl_found = 0;
+-     int use_jroff;
+-
+-     use_jroff = (is_japanese &&
+-		   (strstr(file, "/jman/") || is_lang_page(language, file)));
+ 
+      while ((c = *cp++) != '\0') {
+ 	  switch (c) {
+ 	  case 'e':
+ 	       if (debug)
+ 		    gripe (FOUND_EQN);
+-	       add_directive((do_troff ? "EQN" : use_jroff ? "JNEQN": "NEQN"),
+-			     file, buf, buflen);
++	       add_directive((do_troff ? "EQN" : "NEQN"), file, buf, buflen);
+ 	       break;
+ 
+ 	  case 'g':
+@@ -520,9 +572,27 @@
+      if (*buf == 0)
+ 	  return 1;
+ 
+-     add_directive (do_troff ? "TROFF" : use_jroff ? "JNROFF" : "NROFF",
+-		    "", buf, buflen);
++     add_directive (do_troff ? "TROFF" : "NROFF", "", buf, buflen);
+ 
++     if (!do_troff && strstr(buf, "NROFF_OLD_CHARSET") != NULL) {
++         const char *encoding = NULL;
++         size_t len = strlen("NROFF_OLD_CHARSET");
++         char *p = strstr(buf, "NROFF_OLD_CHARSET");
++
++         if (debug) {
++             fprintf(stderr, "\nfound '%s' in path\n", "NROFF_OLD_CHARSET");
++         }
++         encoding = get_legacy_encoding(file);
++         if (debug) {
++             fprintf(stderr, "\nold charset of '%s' is '%s'\n", file, encoding);
++         }
++         if (strlen(encoding) < len) {
++             memmove(p, p + len, strlen(p + len) + 1);
++             memmove(p + strlen(encoding), p, strlen(p) + 1);
++             memcpy(p, encoding, strlen(encoding));
++         }
++     }
++     
+      if (tbl_found && !do_troff && *getval("COL"))
+ 	  add_directive ("COL", "", buf, buflen);
+ 
+@@ -1181,22 +1251,6 @@
+      return status;
+ }
+ 
+-/* Special code for Japanese (to pick jnroff instead of nroff, etc.) */
+-static void
+-setlang(void) {
+-	char *lang;
+-
+-	/* We use getenv() instead of setlocale(), because of
+-	   glibc 2.1.x security policy for SetUID/SetGID binary. */
+-	if ((lang = getenv("LANG")) == NULL &&
+-	    (lang = getenv("LC_ALL")) == NULL &&
+-	    (lang = getenv("LC_CTYPE")) == NULL)
+-		/* nothing */;
+-
+-	language = lang;
+-	is_japanese = (lang && strncmp(lang, "ja", 2) == 0);
+-}
+-
+ /*
+  * Handle the apropos option.  Cheat by using another program.
+  */
+@@ -1263,10 +1317,6 @@
+      setlocale(LC_MESSAGES, "");
+ #endif
+ 
+-     /* No doubt we'll need some generic language code here later.
+-	For the moment only Japanese support. */
+-     setlang();
+-
+      /* Handle /usr/man/man1.Z/name.1 nonsense from HP */
+      dohp = getenv("MAN_HP_DIREXT");		/* .Z */
+ 
+--- man-1.6b/src/man.conf.in.nroff	2005-11-10 10:02:58.000000000 +0100
++++ man-1.6b/src/man.conf.in	2005-11-10 10:39:04.442673600 +0100
+@@ -86,14 +86,12 @@
+ # (Maybe - but today I need -Tlatin1 to prevent double conversion to utf8.)
+ #
+ # If you have a new troff (version 1.18.1?) and its colored output
+-# causes problems, add the -c option to TROFF, NROFF, JNROFF.
++# causes problems, add the -c option to TROFF, NROFF.
+ #
+ TROFF		@troff@
+ NROFF		@nroff@
+-JNROFF		@jnroff@
+ EQN		@eqn@
+ NEQN		@neqn@
+-JNEQN		@jneqn@
+ TBL		@tbl@
+ @nocol@COL		@col@
+ REFER		@refer@
+--- man-1.6b/src/paths.h.in.nroff	2005-08-21 01:26:06.000000000 +0200
++++ man-1.6b/src/paths.h.in	2005-11-10 10:38:09.156078440 +0100
+@@ -16,10 +16,8 @@
+     { "WHATIS",   "@whatis@" },
+     { "TROFF",	"@troff@" },
+     { "NROFF",	"@nroff@" },
+-    { "JNROFF",	"@jnroff@" },
+     { "EQN",	"@eqn@" },
+     { "NEQN",	"@neqn@" },
+-    { "JNEQN",	"@jneqn@" },
+     { "TBL",	"@tbl@" },
+     { "COL",	"@pcol@" },
+     { "REFER",	"@refer@" },

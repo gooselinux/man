@@ -1,0 +1,16 @@
+diff -up man-1.6f/src/makewhatis.sh.pom man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.pom	2008-11-20 09:09:18.000000000 +0100
++++ man-1.6f/src/makewhatis.sh	2008-11-20 09:20:55.000000000 +0100
+@@ -216,10 +216,10 @@ do
+ 	   utf8=
+             for x in $(find $mandir/${pages}$i -name '*' $findarg0 $findarg)
+             do
+-               if [ ${x%.gz} != ${x} ]
++               if [ "${x%.gz}" != "${x}" ]
+                then
+                   cat=zcat
+-               elif [ ${x%.bz2} != ${x} ]
++               elif [ "${x%.bz2}" != "${x}" ]
+                then
+                   cat=bzcat
+                else

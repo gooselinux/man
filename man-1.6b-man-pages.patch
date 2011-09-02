@@ -1,0 +1,61 @@
+diff -up man-1.6f/man/en/man.man.up12346 man-1.6f/man/en/man.man
+--- man-1.6f/man/en/man.man.up12346	2007-12-22 12:38:57.000000000 +0100
++++ man-1.6f/man/en/man.man	2008-09-01 17:27:43.000000000 +0200
+@@ -101,7 +101,7 @@ Distributions customize the manual secti
+ Specify the configuration file to use; the default is
+ .BR @man_config_file@ .
+ (See
+-.BR man.conf (5).)
++.BR man.config (5).)
+ .TP
+ .B \-\^M " path"
+ Specify the list of directories to search for man pages.
+@@ -247,7 +247,7 @@ can be specified in
+ No cat pages are saved when the required cat directory does not exist.
+ No cat pages are saved when they are formatted for a line length
+ different from 80.
+-No cat pages are saved when man.conf contains the line NOCACHE.
++No cat pages are saved when man.config contains the line NOCACHE.
+ .PP
+ It is possible to make
+ .B man
+@@ -521,4 +521,4 @@ Zeyd M. Ben-Halim released man 1.2, and 
+ versions 1.3 thru 1.5p.
+ Federico Lucifredi <flucifredi@acm.org> is the current maintainer.
+ .SH "SEE ALSO"
+-apropos(1), whatis(1), less(1), groff(1), man.conf(5).
++apropos(1), whatis(1), less(1), groff(1), man.config(5).
+diff -up man-1.6f/man/en/makewhatis.man.up12346 man-1.6f/man/en/makewhatis.man
+--- man-1.6f/man/en/makewhatis.man.up12346	2006-07-19 06:28:47.000000000 +0200
++++ man-1.6f/man/en/makewhatis.man	2008-09-01 17:27:43.000000000 +0200
+@@ -49,7 +49,7 @@ is assumed by default.
+ .SH OPTIONS
+ .TP
+ .B -u
+-Update database with new pages.
++Update database with new pages (file's status was last changed 24 hours ago)
+ .TP
+ .B -v
+ Verbose output
+diff -up man-1.6f/man/en/man.conf.man.up12346 man-1.6f/man/en/man.conf.man
+--- man-1.6f/man/en/man.conf.man.up12346	2005-09-19 08:30:42.000000000 +0200
++++ man-1.6f/man/en/man.conf.man	2008-09-01 17:27:43.000000000 +0200
+@@ -1,7 +1,7 @@
+ .\" @(#)man.conf
+-.TH MAN.CONF 5 "September 19, 2005"
++.TH MAN.CONFIG 5 "September 19, 2005"
+ .SH NAME
+-man.conf \- configuration data for man
++man.config \- configuration data for man
+ .SH DESCRIPTION
+ .LP
+ This file is read by
+@@ -12,7 +12,7 @@ and (c) a list with uncompressors for fi
+ An alternative version of this file can be specified with
+ .LP
+ .RS
+-man -C private_man.conf ...
++man -C private_man.config ...
+ .RE
+ .LP
+ The command names may be provided with options. 

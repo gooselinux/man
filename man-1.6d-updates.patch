@@ -1,0 +1,26 @@
+--- man-1.6d/src/paths.h.in.upd	2006-10-27 09:39:06.000000000 +0200
++++ man-1.6d/src/paths.h.in	2006-10-27 09:40:26.000000000 +0200
+@@ -33,5 +33,6 @@
+     { "COMPRESS_EXT", "@compress_ext@" }, /* not a path, just a string variable */
+     { "DECOMPRESS",	"@decompress@" },
+     { "MANSECT",  "@sections@"},          /* idem */
+-    { "MANDEFOPTIONS", ""}                /* idem */
++    { "MANDEFOPTIONS", ""},               /* idem */
++    { "MAKEWHATISDBUPDATES", ""}	  /* option is used in makewhatis.cron{weekly|daily} scripts */
+ };
+--- man-1.6d/src/man.conf.in.upd	2006-10-27 09:39:06.000000000 +0200
++++ man-1.6d/src/man.conf.in	2006-10-27 09:39:06.000000000 +0200
+@@ -135,3 +135,13 @@
+ .Z		@zcat@
+ .F		@fcat@
+ .Y		@unyabba@
++#
++# Enable/disable makewhatis database cron updates.
++# If MAKEWHATISDBUPDATES variable is uncommented
++# and set to n or N, cron scripts 
++# /etc/cron.daily/makewhatis.cron
++# /etc/cron.weekly/makewhatis.cron
++# will not update makewhatis database.
++# Otherwise the database will be updated.
++# 
++#MAKEWHATISDBUPDATES	n

@@ -1,0 +1,86 @@
+Unpacking the manual twice, just to find out wherher it's utf8 -- Bad.
+Launching awk per file instead of per dir -- Bad.
+Determining which decompressor to use twice -- Bad.
+Constantly sorting the database keeping it inconsistent -- Bad.
+
+diff -up man-1.6f/src/makewhatis.sh.perf man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.perf	2009-04-19 23:02:45.673198925 +0200
++++ man-1.6f/src/makewhatis.sh	2009-04-19 23:02:45.691198800 +0200
+@@ -36,6 +36,8 @@
+ # 060719 - section choosing behavior to match man's (Mike frysinger).
+ #
+ # 090419 - Add -U flag, Lubomir Rintel <lkundrak@v3.sk>
++# 090419 - Don't write the database until we're finished, Lubomir Rintel <lkundrak@v3.sk>
++# 090419 - Substantial performance improvements, Lubomir Rintel <lkundrak@v3.sk>
+ #
+ # Note for Slackware users: "makewhatis -v -w -c" will work.
+ #
+@@ -218,24 +220,7 @@ do
+ 	    cd ${pages}$i
+ 	    section=$i
+ 	    curdir=$mandir/${pages}$i
+-	    export section verbose curdir
+-
+-	   utf8=
+-            for x in $(find $mandir/${pages}$i -name '*' $findarg0 $findarg)
+-            do
+-               if [ "${x%.gz}" != "${x}" ]
+-               then
+-                  cat=zcat
+-               elif [ "${x%.bz2}" != "${x}" ]
+-               then
+-                  cat=bzcat
+-               else
+-                  cat=cat
+-               fi
+-   
+-               if ${cat} ${x} | iconv -f utf-8 -t utf-8 -o /dev/null 2>/dev/null
+-               then
+-                  echo ${x} | $AWK '
++            find $mandir/${pages}$i -name '*' $findarg0 $findarg | $AWK '
+ 
+ 	    function readline() {
+               if (use_zcat || use_bzcat || use_lzcat) {
+@@ -295,6 +280,8 @@ do
+                 } else {
+                   pipe_cmd = "lzcat \"" filename "\" 2>/dev/null";
+                 }
++                # Chuck output unless it is utf-8
++                pipe_cmd = pipe_cmd " |iconv -f utf-8 -t utf-8 2>/dev/null"
+ 		# try to avoid suspicious stuff
+ 		if (filename ~ /[;&|`$(]/) {
+ 		  print "ignored strange file name " filename " in " curdir > "/dev/stderr";
+@@ -442,24 +429,23 @@ do
+ 	      do_one();
+ 	    }
+ 	    ' pages=$pages section=$section verbose=$verbose curdir=$curdir
+-		fi
+-	      done
+ 	    cd ..
+ 	 fi
+-       done > $TMPFILE
++       done >> $TMPFILE
+ 
+        cd "$here"
+ 
+-       if [ -f ${whatisdb} ]
+-       then
+-         cat ${whatisdb} >> $TMPFILE
+-       fi
+-       tr -s '\n' < $TMPFILE | sort -u > ${whatisdb}
+-
+-       chmod 644 ${whatisdb}
+    done
++
+ done
+ 
++if [ -f ${whatisdb} ]
++then
++  cat ${whatisdb} >> $TMPFILE
++fi
++tr -s '\n' < $TMPFILE | sort -u > ${whatisdb}
++chmod 644 ${whatisdb}
++
+ # remove tempdir
+ rm -rf $TMPFILE
+ 

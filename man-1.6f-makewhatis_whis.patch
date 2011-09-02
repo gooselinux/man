@@ -1,0 +1,40 @@
+diff -up man-1.6f/src/makewhatis.sh.whispath man-1.6f/src/makewhatis.sh
+--- man-1.6f/src/makewhatis.sh.whispath	2009-02-12 14:22:51.000000000 +0100
++++ man-1.6f/src/makewhatis.sh	2009-02-12 14:28:19.000000000 +0100
+@@ -62,7 +62,8 @@ done
+ DEFCATPATH=$dc
+ 
+ # make a single big /var/cache/man/whatis file,
+-DEFWHATIS=/var/cache/man/whatis
++DEFWHATISDIR=/var/cache/man
++DEFWHATIS=$DEFWHATISDIR/whatis
+ 
+ AWK=@awk@
+ 
+@@ -183,20 +184,20 @@ do
+ 	mandir1=$mandir
+      fi
+ 
+-     # if $mandir is on a readonly partition, and the whatis file
++     # if $DEFWHATISDIR is on a readonly partition, and the whatis file
+      # is not a symlink, then let's skip trying to update it
+-     if [ ! -L ${mandir1}/whatis ]
++     if [ ! -L $DEFWHATIS ]
+      then
+-	if [ -e ${mandir1}/whatis ] && [ ! -w ${mandir1}/whatis ]
++	if [ -e $DEFWHATIS ] && [ ! -w $DEFWHATIS ]
+ 	then
+ 	   if [ x$verbose != x ]; then
+-	      echo skipping $mandir - whatis file is readonly > /dev/stderr
++	      echo skipping $DEFWHATISDIR - whatis file is readonly > /dev/stderr
+ 	   fi
+ 	   continue
+-	elif [ ! -e ${mandir1}/whatis ] && [ ! -w ${mandir1} ]
++	elif [ ! -e $DEFWHATIS ] && [ ! -w $DEFWHATISDIR ]
+ 	then
+ 	   if [ x$verbose != x ]; then
+-	      echo skipping $mandir - directory is readonly > /dev/stderr
++	      echo skipping $DEFWHATISDIR - directory is readonly > /dev/stderr
+ 	   fi
+ 	   continue
+ 	fi
